@@ -6,7 +6,7 @@ dataSources:
     name: FactoryFundraising
     network: chapel
     source:
-      address: "0xA896EA960219596b2457104026C01ef556906090"
+      address: "0x5fDa9977D813e2C2b56A7FB996b0b1943ddeb365"
       abi: FactoryFundraising
       startBlock: 45390076
     mapping:
@@ -33,7 +33,7 @@ dataSources:
     name: FactoryFundraisingDao
     network: chapel
     source:
-      address: "0xD667766A0B5Dea93658E8f6D3835408129D94F98"
+      address: "0xaB90644BC8759Ad29B41724dEE76faece99B4a33"
       abi: FactoryFundraisingDao
       startBlock: 45390076
     mapping:
@@ -56,7 +56,7 @@ dataSources:
     name: FactoryToken
     network: chapel
     source:
-      address: "0x2Be2332E8fc7E39043F7fCD8a1F783353F4d018f"
+      address: "0x42F0c3F4372dc34B31557F13529c75d8175acCC1"
       abi: FactoryToken
       startBlock: 45390076
     mapping:
@@ -78,9 +78,9 @@ dataSources:
     name: PropertyGovernance
     network: chapel
     source:
-      address: "0xA3a3949FA69fff971Ea7E45fB11c9FD9F899EE04"
+      address: "0x197cF98961B77B2f580DD5fCCb9C7B38B5d685b3"
       abi: PropertyGovernance
-      startBlock: 45390076
+      startBlock: 45397593
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -94,11 +94,11 @@ dataSources:
         - name: PropertyToken
           file: PropertyGovernance\abis\PropertyToken.json
       eventHandlers:
-        - event: ProposalCreated(indexed uint256,indexed address,string)
+        - event: ProposalCreated(indexed uint256,indexed address,indexed address,string)
           handler: handleProposalCreated
-        - event: VoteCast(indexed address,indexed uint256,bool,uint256)
+        - event: VoteCast(indexed address,indexed uint256,indexed address,bool,uint256)
           handler: handleVoteCast
-        - event: ProposalExecuted(indexed uint256)
+        - event: ProposalExecuted(indexed address,indexed uint256,indexed address)
           handler: handleProposalExecuted
       file: PropertyGovernance\PropertyGovernance.wasm
 templates:

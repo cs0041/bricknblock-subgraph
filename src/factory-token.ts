@@ -4,47 +4,44 @@ import {
 } from '../generated/FactoryToken/FactoryToken'
 import { PropertyToken as PropertyTokenContract } from '../generated/FactoryToken/PropertyToken'
 import { PropertyToken as PropertyTokenTemplate } from '../generated/templates'
-import { PropertyToken } from '../generated/schema'
+import { PropertyToken, Fundraising, NFT } from '../generated/schema'
 import { BigInt } from '@graphprotocol/graph-ts'
 
 export function handleTokenCreated(event: TokenCreated): void {
-  // Get token address from allPropertyTokenContracts array
-  let factoryContract = FactoryToken.bind(event.address)
-  let tokenAddress = factoryContract.allPropertyTokenContracts(
-    BigInt.fromI32(0)
-  )
+  let propertyTokenId = event.params.token.toHexString()
 
-  // Create new PropertyToken entity
-  let token = new PropertyToken(tokenAddress.toHexString())
-
-  // Get the actual token contract to fetch name and symbol
-  let tokenContract = PropertyTokenContract.bind(tokenAddress)
+  // Create or update PropertyToken entity
+  let token = new PropertyToken(propertyTokenId)
+  let tokenContract = PropertyTokenContract.bind(event.params.token)
 
   token.address = event.params.token
-  token.name = tokenContract.name()
-  token.symbol = tokenContract.symbol()
+  token.name = tokenContract.try_name().value
+  token.symbol = tokenContract.try_symbol().value
   token.totalSupply = BigInt.fromI32(0)
   token.createdAt = event.block.timestamp
   token.save()
 
+  // Update Fundraising if it exists
+  let fundraising = Fundraising.load(
+    event.params.fundraisingContract.toHexString()
+  )
+  if (fundraising) {
+    fundraising.propertyToken = propertyTokenId
+    fundraising.save()
+
+    // Update the PropertyToken with fundraising reference
+    token.fundraising = fundraising.id
+    token.save()
+
+    // Update NFT if it exists
+    let nft = NFT.load(fundraising.nft)
+    if (nft) {
+      nft.isTokenized = true
+      nft.propertyToken = propertyTokenId
+      nft.save()
+    }
+  }
+
   // Start indexing the new token contract
   PropertyTokenTemplate.create(event.params.token)
 }
-
-// export function handleTokenCreated(event: TokenCreated): void {
-//   // Create new PropertyToken entity
-//   let token = new PropertyToken(event.params.token.toHexString())
-
-//   // Get the actual token contract to fetch name and symbol
-//   let tokenContract = PropertyTokenContract.bind(event.params.token)
-
-//   token.address = event.params.token
-//   token.name = tokenContract.try_name().value
-//   token.symbol = tokenContract.try_symbol().value
-//   token.totalSupply = BigInt.fromI32(0)
-//   token.createdAt = event.block.timestamp
-//   token.save()
-
-//   // Start indexing the new token contract
-//   PropertyTokenTemplate.create(event.params.token)
-// }

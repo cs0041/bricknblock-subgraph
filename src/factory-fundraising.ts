@@ -8,21 +8,7 @@ import { Fundraising, NFT } from '../generated/schema'
 import { NFT as RealEstateNFT } from '../generated/FactoryFundraising/NFT'
 
 export function handleFundraisingCreated(event: FundraisingCreated): void {
-  // Create new Fundraising entity
-  let fundraising = new Fundraising(event.params.fundraising.toHexString())
-  fundraising.address = event.params.fundraising
-  fundraising.nftId = event.params.nftId
-  fundraising.owner = event.params.owner
-  fundraising.goalAmount = event.params.goalAmount
-  fundraising.minInvestment = event.params.minInvestment
-  fundraising.maxInvestment = event.params.maxInvestment
-  fundraising.deadline = event.params.duration.plus(event.block.timestamp)
-  fundraising.totalRaised = BigInt.fromI32(0)
-  fundraising.isCompleted = false
-  fundraising.createdAt = event.block.timestamp
-  fundraising.save()
-
-  // Create NFT entity if it doesn't exist
+  // Create NFT entity first if it doesn't exist
   let factoryContract = FactoryFundraising.bind(event.address)
   let nftContract = RealEstateNFT.bind(factoryContract.nftContract())
   let nftId = event.params.nftId.toString()
@@ -40,6 +26,20 @@ export function handleFundraisingCreated(event: FundraisingCreated): void {
     nft.isTokenized = false
     nft.save()
   }
+
+  // Create new Fundraising entity
+  let fundraising = new Fundraising(event.params.fundraising.toHexString())
+  fundraising.address = event.params.fundraising
+  fundraising.nft = nftId
+  fundraising.owner = event.params.owner
+  fundraising.goalAmount = event.params.goalAmount
+  fundraising.minInvestment = event.params.minInvestment
+  fundraising.maxInvestment = event.params.maxInvestment
+  fundraising.deadline = event.params.duration.plus(event.block.timestamp)
+  fundraising.totalRaised = BigInt.fromI32(0)
+  fundraising.isCompleted = false
+  fundraising.createdAt = event.block.timestamp
+  fundraising.save()
 
   // Start indexing the new fundraising contract
   RealEstateFundraisingTemplate.create(event.params.fundraising)

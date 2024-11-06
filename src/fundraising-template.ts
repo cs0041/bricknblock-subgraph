@@ -53,14 +53,13 @@ export function handleTokensClaimed(event: TokensClaimed): void {
     investment.save()
   }
 }
-
 export function handlePropertyTokenCreated(event: PropertyTokenCreated): void {
   let fundraising = Fundraising.load(event.address.toHexString())
   if (fundraising) {
     fundraising.propertyToken = event.params.tokenAddress.toHexString()
     fundraising.save()
 
-    let nft = NFT.load(fundraising.nftId.toString())
+    let nft = NFT.load(fundraising.nft)
     if (nft) {
       nft.isTokenized = true
       nft.propertyToken = event.params.tokenAddress.toHexString()

@@ -35,8 +35,12 @@ export function handleTransfer(event: Transfer): void {
     toHolder.address = event.params.to
     toHolder.token = token.id
     toHolder.balance = BigInt.fromI32(0)
+    toHolder.votingPower = BigInt.fromI32(0)
   }
   toHolder.balance = toHolder.balance.plus(event.params.value)
+  if (!toHolder.delegatedTo) {
+    toHolder.votingPower = toHolder.balance
+  }
   toHolder.save()
 
   // Create Transfer entity

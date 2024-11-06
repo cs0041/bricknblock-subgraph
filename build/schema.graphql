@@ -1,7 +1,7 @@
 type Fundraising @entity {
   id: ID!
   address: Bytes!
-  nftId: BigInt!
+  nft: NFT!
   owner: Bytes!
   goalAmount: BigInt!
   minInvestment: BigInt!
@@ -82,6 +82,7 @@ type NFT @entity {
   documents: String!
   isTokenized: Boolean!
   propertyToken: PropertyToken
+  fundraising: Fundraising @derivedFrom(field: "nft")
 }
 
 type Proposal @entity {

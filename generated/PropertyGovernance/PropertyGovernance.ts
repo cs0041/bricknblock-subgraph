@@ -53,8 +53,12 @@ export class ProposalCreated__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
+  get propertyToken(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
   get description(): string {
-    return this._event.parameters[2].value.toString();
+    return this._event.parameters[3].value.toString();
   }
 }
 
@@ -71,8 +75,16 @@ export class ProposalExecuted__Params {
     this._event = event;
   }
 
+  get executor(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
   get proposalId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get propertyToken(): Address {
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -97,12 +109,16 @@ export class VoteCast__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
+  get propertyToken(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
   get support(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+    return this._event.parameters[3].value.toBoolean();
   }
 
   get weight(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -116,7 +132,7 @@ export class PropertyGovernance__getProposalResult {
   value6: BigInt;
   value7: boolean;
   value8: i32;
-  value9: Bytes;
+  value9: Address;
 
   constructor(
     value0: BigInt,
@@ -128,7 +144,7 @@ export class PropertyGovernance__getProposalResult {
     value6: BigInt,
     value7: boolean,
     value8: i32,
-    value9: Bytes,
+    value9: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -156,7 +172,7 @@ export class PropertyGovernance__getProposalResult {
       "value8",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value8)),
     );
-    map.set("value9", ethereum.Value.fromBytes(this.value9));
+    map.set("value9", ethereum.Value.fromAddress(this.value9));
     return map;
   }
 
@@ -196,7 +212,7 @@ export class PropertyGovernance__getProposalResult {
     return this.value8;
   }
 
-  getCallData(): Bytes {
+  getTarget(): Address {
     return this.value9;
   }
 }
@@ -212,8 +228,9 @@ export class PropertyGovernance__proposalsResult {
   value7: boolean;
   value8: i32;
   value9: Address;
-  value10: Bytes;
-  value11: BigInt;
+  value10: Address;
+  value11: Bytes;
+  value12: BigInt;
 
   constructor(
     value0: BigInt,
@@ -226,8 +243,9 @@ export class PropertyGovernance__proposalsResult {
     value7: boolean,
     value8: i32,
     value9: Address,
-    value10: Bytes,
-    value11: BigInt,
+    value10: Address,
+    value11: Bytes,
+    value12: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -241,6 +259,7 @@ export class PropertyGovernance__proposalsResult {
     this.value9 = value9;
     this.value10 = value10;
     this.value11 = value11;
+    this.value12 = value12;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -258,8 +277,9 @@ export class PropertyGovernance__proposalsResult {
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value8)),
     );
     map.set("value9", ethereum.Value.fromAddress(this.value9));
-    map.set("value10", ethereum.Value.fromBytes(this.value10));
-    map.set("value11", ethereum.Value.fromUnsignedBigInt(this.value11));
+    map.set("value10", ethereum.Value.fromAddress(this.value10));
+    map.set("value11", ethereum.Value.fromBytes(this.value11));
+    map.set("value12", ethereum.Value.fromUnsignedBigInt(this.value12));
     return map;
   }
 
@@ -303,12 +323,16 @@ export class PropertyGovernance__proposalsResult {
     return this.value9;
   }
 
-  getCallData(): Bytes {
+  getPropertyToken(): Address {
     return this.value10;
   }
 
-  getProposalSnapshot(): BigInt {
+  getCallData(): Bytes {
     return this.value11;
+  }
+
+  getProposalSnapshot(): BigInt {
+    return this.value12;
   }
 }
 
@@ -480,7 +504,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): PropertyGovernance__getProposalResult {
     let result = super.call(
       "getProposal",
-      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,bytes)",
+      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address)",
       [
         ethereum.Value.fromAddress(propertyToken),
         ethereum.Value.fromUnsignedBigInt(proposalId),
@@ -497,7 +521,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
       result[6].toBigInt(),
       result[7].toBoolean(),
       result[8].toI32(),
-      result[9].toBytes(),
+      result[9].toAddress(),
     );
   }
 
@@ -507,7 +531,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): ethereum.CallResult<PropertyGovernance__getProposalResult> {
     let result = super.tryCall(
       "getProposal",
-      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,bytes)",
+      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address)",
       [
         ethereum.Value.fromAddress(propertyToken),
         ethereum.Value.fromUnsignedBigInt(proposalId),
@@ -528,7 +552,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
         value[6].toBigInt(),
         value[7].toBoolean(),
         value[8].toI32(),
-        value[9].toBytes(),
+        value[9].toAddress(),
       ),
     );
   }
@@ -664,7 +688,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): PropertyGovernance__proposalsResult {
     let result = super.call(
       "proposals",
-      "proposals(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address,bytes,uint256)",
+      "proposals(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address,address,bytes,uint256)",
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromUnsignedBigInt(param1),
@@ -682,8 +706,9 @@ export class PropertyGovernance extends ethereum.SmartContract {
       result[7].toBoolean(),
       result[8].toI32(),
       result[9].toAddress(),
-      result[10].toBytes(),
-      result[11].toBigInt(),
+      result[10].toAddress(),
+      result[11].toBytes(),
+      result[12].toBigInt(),
     );
   }
 
@@ -693,7 +718,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): ethereum.CallResult<PropertyGovernance__proposalsResult> {
     let result = super.tryCall(
       "proposals",
-      "proposals(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address,bytes,uint256)",
+      "proposals(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address,address,bytes,uint256)",
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromUnsignedBigInt(param1),
@@ -715,8 +740,9 @@ export class PropertyGovernance extends ethereum.SmartContract {
         value[7].toBoolean(),
         value[8].toI32(),
         value[9].toAddress(),
-        value[10].toBytes(),
-        value[11].toBigInt(),
+        value[10].toAddress(),
+        value[11].toBytes(),
+        value[12].toBigInt(),
       ),
     );
   }

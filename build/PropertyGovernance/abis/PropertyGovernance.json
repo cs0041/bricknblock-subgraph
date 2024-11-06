@@ -67,6 +67,12 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "propertyToken",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "string",
         "name": "description",
@@ -81,9 +87,21 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "executor",
+        "type": "address"
+      },
+      {
+        "indexed": true,
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "propertyToken",
+        "type": "address"
       }
     ],
     "name": "ProposalExecuted",
@@ -103,6 +121,12 @@
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "propertyToken",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -329,9 +353,9 @@
         "type": "uint8"
       },
       {
-        "internalType": "bytes",
-        "name": "callData",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -495,6 +519,11 @@
       {
         "internalType": "address",
         "name": "target",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "propertyToken",
         "type": "address"
       },
       {

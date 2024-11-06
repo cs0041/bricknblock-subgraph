@@ -1,4 +1,4 @@
-import { BigInt, Address } from '@graphprotocol/graph-ts'
+import { BigInt, Address, Bytes } from '@graphprotocol/graph-ts'
 import {
   ProposalCreated,
   VoteCast,
@@ -7,39 +7,24 @@ import {
 } from '../generated/PropertyGovernance/PropertyGovernance'
 import { PropertyToken as PropertyTokenContract } from '../generated/PropertyGovernance/PropertyToken'
 import { Proposal, Vote, PropertyToken, TokenHolder } from '../generated/schema'
+import { log } from 'matchstick-as'
 
 export function handleProposalCreated(event: ProposalCreated): void {
   let propertyGovernance = PropertyGovernance.bind(event.address)
   let proposalResult = propertyGovernance.try_getProposal(
-    event.params.proposer, // propertyToken address
+    event.params.propertyToken, // propertyToken address
     event.params.proposalId
   )
 
   if (!proposalResult.reverted) {
     let proposal = proposalResult.value
-    let proposalId = event.params.proposer
+    let proposalId = event.params.propertyToken
       .toHexString()
       .concat('-')
       .concat(event.params.proposalId.toString())
 
     // Load or create PropertyToken
-    let propertyTokenId = event.params.proposer.toHexString()
-    let propertyToken = PropertyToken.load(propertyTokenId)
-    if (!propertyToken) {
-      propertyToken = new PropertyToken(propertyTokenId)
-      let tokenContract = PropertyTokenContract.bind(event.params.proposer)
-
-      let nameResult = tokenContract.try_name()
-      propertyToken.name = nameResult.reverted ? '' : nameResult.value
-
-      let symbolResult = tokenContract.try_symbol()
-      propertyToken.symbol = symbolResult.reverted ? '' : symbolResult.value
-
-      propertyToken.address = event.params.proposer
-      propertyToken.totalSupply = BigInt.fromI32(0)
-      propertyToken.createdAt = event.block.timestamp
-      propertyToken.save()
-    }
+    let propertyTokenId = event.params.propertyToken.toHexString()
 
     let proposalEntity = new Proposal(proposalId)
     proposalEntity.propertyToken = propertyTokenId
@@ -55,10 +40,12 @@ export function handleProposalCreated(event: ProposalCreated): void {
     proposalEntity.target = Address.fromString(
       '0x0000000000000000000000000000000000000000'
     )
-    proposalEntity.callData = proposal.getCallData()
+    proposalEntity.callData = Bytes.fromHexString(
+      '0x0000000000000000000000000000000000000000'
+    )
     proposalEntity.proposalSnapshot = BigInt.fromI32(0)
     proposalEntity.state = propertyGovernance.getProposalState(
-      event.params.proposer,
+      event.params.propertyToken,
       event.params.proposalId
     )
     proposalEntity.createdAt = event.block.timestamp
@@ -67,7 +54,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
 }
 
 export function handleVoteCast(event: VoteCast): void {
-  let proposalId = event.address
+  let proposalId = event.params.propertyToken
     .toHexString()
     .concat('-')
     .concat(event.params.proposalId.toString())
