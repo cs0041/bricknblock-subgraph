@@ -1,0 +1,206 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: FactoryFundraising
+    network: chapel
+    source:
+      address: '0xA896EA960219596b2457104026C01ef556906090' # FactoryFundraising address
+      abi: FactoryFundraising
+      startBlock: 45390076 # Deployment block
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Fundraising
+        - Investment
+        - NFT
+      abis:
+        - name: FactoryFundraising
+          file: ./abis/FactoryFundraising.json
+        - name: RealEstateFundraising
+          file: ./abis/RealEstateFundraising.json
+        - name: NFT
+          file: ./abis/RealEstateNFT.json
+      eventHandlers:
+        - event: FundraisingCreated(indexed address,indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleFundraisingCreated
+      file: ./src/factory-fundraising.ts
+
+  - kind: ethereum
+    name: FactoryFundraisingDao
+    network: chapel
+    source:
+      address: '0xD667766A0B5Dea93658E8f6D3835408129D94F98' # FactoryFundraisingDao address
+      abi: FactoryFundraisingDao
+      startBlock: 45390076
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FundraisingDao
+        - Investment
+      abis:
+        - name: FactoryFundraisingDao
+          file: ./abis/FactoryFundraisingDao.json
+        - name: RealEstateFundraisingDao
+          file: ./abis/RealEstateFundraisingDao.json
+      eventHandlers:
+        - event: FundraisingDaoCreated(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleFundraisingDaoCreated
+      file: ./src/factory-fundraising-dao.ts
+
+  - kind: ethereum
+    name: FactoryToken
+    network: chapel
+    source:
+      address: '0x2Be2332E8fc7E39043F7fCD8a1F783353F4d018f' # FactoryToken address
+      abi: FactoryToken
+      startBlock: 45390076
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PropertyToken
+      abis:
+        - name: FactoryToken
+          file: ./abis/FactoryToken.json
+        - name: PropertyToken
+          file: ./abis/PropertyToken.json
+      eventHandlers:
+        - event: TokenCreated(indexed address,address)
+          handler: handleTokenCreated
+      file: ./src/factory-token.ts
+
+  - kind: ethereum
+    name: PropertyGovernance
+    network: chapel
+    source:
+      address: '0xA3a3949FA69fff971Ea7E45fB11c9FD9F899EE04' # PropertyGovernance address
+      abi: PropertyGovernance
+      startBlock: 45390076
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Vote
+      abis:
+        - name: PropertyGovernance
+          file: ./abis/PropertyGovernance.json
+        - name: PropertyToken
+          file: ./abis/PropertyToken.json
+      eventHandlers:
+        - event: ProposalCreated(indexed uint256,indexed address,string)
+          handler: handleProposalCreated
+        - event: VoteCast(indexed address,indexed uint256,bool,uint256)
+          handler: handleVoteCast
+        - event: ProposalExecuted(indexed uint256)
+          handler: handleProposalExecuted
+      file: ./src/property-governance.ts
+
+templates:
+  - name: RealEstateFundraising
+    kind: ethereum/contract
+    network: chapel
+    source:
+      abi: RealEstateFundraising
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/fundraising-template.ts
+      entities:
+        - Fundraising
+        - Investment
+      abis:
+        - name: RealEstateFundraising
+          file: ./abis/RealEstateFundraising.json
+      eventHandlers:
+        - event: InvestmentMade(indexed address,uint256)
+          handler: handleInvestmentMade
+        - event: FundraisingCompleted(uint256)
+          handler: handleFundraisingCompleted
+        - event: TokensClaimed(indexed address,uint256)
+          handler: handleTokensClaimed
+
+  - name: RealEstateFundraisingDao
+    kind: ethereum/contract
+    network: chapel
+    source:
+      abi: RealEstateFundraisingDao
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/fundraising-dao-template.ts
+      entities:
+        - FundraisingDao
+        - Investment
+      abis:
+        - name: RealEstateFundraisingDao
+          file: ./abis/RealEstateFundraisingDao.json
+      eventHandlers:
+        - event: InvestmentMade(indexed address,uint256)
+          handler: handleInvestmentMade
+        - event: FundraisingCompleted(uint256)
+          handler: handleFundraisingCompleted
+        - event: TokensClaimed(indexed address,uint256)
+          handler: handleTokensClaimed
+
+  - name: PropertyToken
+    kind: ethereum/contract
+    network: chapel
+    source:
+      abi: PropertyToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/property-token-template.ts
+      entities:
+        - PropertyToken
+        - TokenHolder
+        - Transfer
+      abis:
+        - name: PropertyToken
+          file: ./abis/PropertyToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: DelegateChanged(indexed address,indexed address,indexed address)
+          handler: handleDelegateChanged
+# specVersion: 1.0.0
+# indexerHints:
+#   prune: auto
+# schema:
+#   file: ./schema.graphql
+# dataSources:
+#   - kind: ethereum
+#     name: Contract
+#     network: chapel
+#     source:
+#       address: "0x24362683603c786204b9d6c9df2cECd6462E5352"
+#       abi: Contract
+#       startBlock: 0
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.7
+#       language: wasm/assemblyscript
+#       entities:
+#         - Approval
+#         - Transfer
+#       abis:
+#         - name: Contract
+#           file: ./abis/Contract.json
+#       eventHandlers:
+#         - event: Approval(indexed address,indexed address,uint256)
+#           handler: handleApproval
+#         - event: Transfer(indexed address,indexed address,uint256)
+#           handler: handleTransfer
+#       file: ./src/contract.ts

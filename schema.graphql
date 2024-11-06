@@ -1,0 +1,115 @@
+type Fundraising @entity {
+  id: ID!
+  address: Bytes!
+  nftId: BigInt!
+  owner: Bytes!
+  goalAmount: BigInt!
+  minInvestment: BigInt!
+  maxInvestment: BigInt!
+  deadline: BigInt!
+  totalRaised: BigInt!
+  isCompleted: Boolean!
+  investments: [Investment!]! @derivedFrom(field: "fundraising")
+  propertyToken: PropertyToken
+  createdAt: BigInt!
+}
+
+type FundraisingDao @entity {
+  id: ID!
+  address: Bytes!
+  propertyToken: PropertyToken!
+  proposalId: BigInt!
+  goalAmount: BigInt!
+  minInvestment: BigInt!
+  maxInvestment: BigInt!
+  deadline: BigInt!
+  totalRaised: BigInt!
+  isCompleted: Boolean!
+  investments: [Investment!]! @derivedFrom(field: "fundraisingDao")
+  createdAt: BigInt!
+}
+
+type Investment @entity {
+  id: ID!
+  investor: Bytes!
+  amount: BigInt!
+  claimed: Boolean!
+  fundraising: Fundraising
+  fundraisingDao: FundraisingDao
+  timestamp: BigInt!
+}
+
+type PropertyToken @entity {
+  id: ID!
+  address: Bytes!
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  holders: [TokenHolder!]! @derivedFrom(field: "token")
+  transfers: [Transfer!]! @derivedFrom(field: "token")
+  fundraising: Fundraising
+  fundraisingDao: FundraisingDao
+  proposals: [Proposal!]! @derivedFrom(field: "propertyToken")
+  createdAt: BigInt!
+}
+
+type TokenHolder @entity {
+  id: ID! # token-address
+  address: Bytes!
+  token: PropertyToken!
+  balance: BigInt!
+  delegatedTo: Bytes
+  votingPower: BigInt!
+  votes: [Vote!]! @derivedFrom(field: "voter") # Add this to track holder's votes
+}
+
+type Transfer @entity {
+  id: ID!
+  token: PropertyToken!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+type NFT @entity {
+  id: ID!
+  tokenId: BigInt!
+  owner: Bytes!
+  location: String!
+  area: BigInt!
+  propertyType: String!
+  documents: String!
+  isTokenized: Boolean!
+  propertyToken: PropertyToken
+}
+
+type Proposal @entity {
+  id: ID! # propertyToken-proposalId
+  propertyToken: PropertyToken!
+  proposalId: BigInt!
+  proposer: Bytes!
+  description: String!
+  startTime: BigInt!
+  endTime: BigInt!
+  forVotes: BigInt!
+  againstVotes: BigInt!
+  executed: Boolean!
+  proposalType: Int!
+  target: Bytes
+  callData: Bytes!
+  proposalSnapshot: BigInt!
+  state: Int! # Maps to ProposalState enum
+  votes: [Vote!]! @derivedFrom(field: "proposal")
+  createdAt: BigInt! # Add timestamp for sorting
+}
+
+type Vote @entity {
+  id: ID! # proposal-voter
+  proposal: Proposal!
+  voter: TokenHolder!
+  voterAddress: Bytes! # Keep the raw address
+  support: Boolean!
+  weight: BigInt!
+  timestamp: BigInt!
+}
