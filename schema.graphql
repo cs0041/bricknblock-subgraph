@@ -52,6 +52,7 @@ type PropertyToken @entity {
   fundraisingDao: FundraisingDao
   proposals: [Proposal!]! @derivedFrom(field: "propertyToken")
   nft: NFT
+  dividends: [Dividend!]! @derivedFrom(field: "propertyToken")
   createdAt: BigInt!
 }
 
@@ -124,5 +125,23 @@ type Vote @entity {
   voterAddress: Bytes! # Keep the raw address
   support: Boolean!
   weight: BigInt!
+  timestamp: BigInt!
+}
+
+type Dividend @entity {
+  id: ID! # propertyToken-dividendId
+  propertyToken: PropertyToken!
+  dividendId: BigInt!
+  amount: BigInt!
+  timestamp: BigInt!
+  claims: [DividendClaim!]! @derivedFrom(field: "dividend")
+  totalClaimed: BigInt!
+}
+
+type DividendClaim @entity {
+  id: ID! # dividend-holder
+  dividend: Dividend!
+  holder: TokenHolder!
+  amount: BigInt!
   timestamp: BigInt!
 }

@@ -6,7 +6,7 @@ dataSources:
     name: FactoryFundraising
     network: chapel
     source:
-      address: '0xfEb148017401503cB0726BC3875FcE01e51204f7' # FactoryFundraising address
+      address: '0xB34e3DA3e1Cb266Ad048693b3CD9a1eff3850Bc2' # FactoryFundraising address
       abi: FactoryFundraising
       startBlock: 45390076 # Deployment block
     mapping:
@@ -33,7 +33,7 @@ dataSources:
     name: FactoryFundraisingDao
     network: chapel
     source:
-      address: '0x188d97f93F594914792d3592033Dee5c637302fD' # FactoryFundraisingDao address
+      address: '0x145737D4641da44a76b846b6bc26cE037c19e391' # FactoryFundraisingDao address
       abi: FactoryFundraisingDao
       startBlock: 45390076
     mapping:
@@ -56,7 +56,7 @@ dataSources:
     name: FactoryToken
     network: chapel
     source:
-      address: '0x4e048Db12B5769fa06A5bF5df65B806a1AE2c6d3' # FactoryToken address
+      address: '0xf64593Ff0cD457293D3400DD1F8C949F010e11d8' # FactoryToken address
       abi: FactoryToken
       startBlock: 45390076
     mapping:
@@ -79,7 +79,7 @@ dataSources:
     name: PropertyGovernance
     network: chapel
     source:
-      address: '0xF038D6dBead9aB4f83e4Cf955464132048Bf15BA' # PropertyGovernance address
+      address: '0x60962143Ea130bb806e4E4f89c2580f6A31f457A' # PropertyGovernance address
       abi: PropertyGovernance
       startBlock: 45397593
     mapping:
@@ -197,6 +197,8 @@ templates:
         - PropertyToken
         - TokenHolder
         - Transfer
+        - Dividend
+        - DividendClaim
       abis:
         - name: PropertyToken
           file: ./abis/PropertyToken.json
@@ -205,3 +207,7 @@ templates:
           handler: handleTransfer
         - event: DelegateChanged(indexed address,indexed address,indexed address)
           handler: handleDelegateChanged
+        - event: DividendDistributed(indexed uint256,address,uint256,uint256)
+          handler: handleDividendDistributed
+        - event: DividendClaimed(indexed address,indexed uint256,uint256)
+          handler: handleDividendClaimed
