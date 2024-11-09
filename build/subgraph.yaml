@@ -6,7 +6,7 @@ dataSources:
     name: FactoryFundraising
     network: chapel
     source:
-      address: "0x8C02DC8cce71e853C8893beeC5426611abAA81aF"
+      address: "0xfEb148017401503cB0726BC3875FcE01e51204f7"
       abi: FactoryFundraising
       startBlock: 45390076
     mapping:
@@ -33,7 +33,7 @@ dataSources:
     name: FactoryFundraisingDao
     network: chapel
     source:
-      address: "0xc49d8D1588960B10D4191df1731e92a34c59B3B9"
+      address: "0x188d97f93F594914792d3592033Dee5c637302fD"
       abi: FactoryFundraisingDao
       startBlock: 45390076
     mapping:
@@ -57,7 +57,7 @@ dataSources:
     name: FactoryToken
     network: chapel
     source:
-      address: "0x5A3637F5c5d807A4620B0D1789d019c7521cbA69"
+      address: "0x4e048Db12B5769fa06A5bF5df65B806a1AE2c6d3"
       abi: FactoryToken
       startBlock: 45390076
     mapping:
@@ -79,7 +79,7 @@ dataSources:
     name: PropertyGovernance
     network: chapel
     source:
-      address: "0x4e8A862566E411c1881608DD70f0eed3a2873939"
+      address: "0xF038D6dBead9aB4f83e4Cf955464132048Bf15BA"
       abi: PropertyGovernance
       startBlock: 45397593
     mapping:
@@ -102,6 +102,26 @@ dataSources:
         - event: ProposalExecuted(indexed address,indexed uint256,indexed address)
           handler: handleProposalExecuted
       file: PropertyGovernance\PropertyGovernance.wasm
+  - kind: ethereum
+    name: RealEstateNFT
+    network: chapel
+    source:
+      address: "0x71353005930B49805df867D75C1610092070F3cc"
+      abi: RealEstateNFT
+      startBlock: 45477133
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - NFT
+      abis:
+        - name: RealEstateNFT
+          file: RealEstateNFT\RealEstateNFT.json
+      eventHandlers:
+        - event: PropertyVerified(indexed uint256,indexed address,uint256)
+          handler: handlePropertyVerified
+      file: RealEstateNFT\RealEstateNFT.wasm
 templates:
   - name: RealEstateFundraising
     kind: ethereum/contract
@@ -130,6 +150,8 @@ templates:
           handler: handleInvestmentWithdrawn
         - event: DeadlineExtended(uint256)
           handler: handleDeadlineExtended
+        - event: PropertyTokenCreated(address,uint256)
+          handler: handlePropertyTokenCreated
   - name: RealEstateFundraisingDao
     kind: ethereum/contract
     network: chapel

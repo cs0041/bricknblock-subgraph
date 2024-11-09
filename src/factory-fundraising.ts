@@ -26,6 +26,7 @@ export function handleFundraisingCreated(event: FundraisingCreated): void {
     nft.propertyType = nftInfo.propertyType
     nft.documents = nftInfo.documents
     nft.isTokenized = false
+    nft.isVerified = false
     nft.save()
   }
 

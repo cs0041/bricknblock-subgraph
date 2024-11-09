@@ -37,6 +37,7 @@ export function handleTokenCreated(event: TokenCreated): void {
     let nft = NFT.load(fundraising.nft)
     if (nft) {
       nft.isTokenized = true
+      nft.isVerified = true
       nft.propertyToken = propertyTokenId
       nft.save()
     }

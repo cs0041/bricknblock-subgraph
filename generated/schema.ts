@@ -678,6 +678,23 @@ export class PropertyToken extends Entity {
     );
   }
 
+  get nft(): string | null {
+    let value = this.get("nft");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nft(value: string | null) {
+    if (!value) {
+      this.unset("nft");
+    } else {
+      this.set("nft", Value.fromString(<string>value));
+    }
+  }
+
   get createdAt(): BigInt {
     let value = this.get("createdAt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1129,6 +1146,19 @@ export class NFT extends Entity {
 
   set isTokenized(value: boolean) {
     this.set("isTokenized", Value.fromBoolean(value));
+  }
+
+  get isVerified(): boolean {
+    let value = this.get("isVerified");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set isVerified(value: boolean) {
+    this.set("isVerified", Value.fromBoolean(value));
   }
 
   get propertyToken(): string | null {

@@ -51,6 +51,7 @@ type PropertyToken @entity {
   fundraising: Fundraising
   fundraisingDao: FundraisingDao
   proposals: [Proposal!]! @derivedFrom(field: "propertyToken")
+  nft: NFT
   createdAt: BigInt!
 }
 
@@ -90,6 +91,7 @@ type NFT @entity {
   documents: String! 
   image: String!
   isTokenized: Boolean!
+  isVerified: Boolean!
   propertyToken: PropertyToken
   fundraising: Fundraising @derivedFrom(field: "nft")
 }

@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts'
+import { BigInt, log } from '@graphprotocol/graph-ts'
 import {
   InvestmentMade,
   InvestmentWithdrawn,
@@ -88,13 +88,26 @@ export function handlePropertyTokenCreated(event: PropertyTokenCreated): void {
     fundraising.propertyToken = event.params.tokenAddress.toHexString()
     fundraising.save()
 
-    let nft = NFT.load(fundraising.nft)
+      let nftId = event.params.nftId.toString()
+      let nft = NFT.load(nftId)
+
     if (nft) {
       nft.isTokenized = true
+      nft.isVerified = true
       nft.propertyToken = event.params.tokenAddress.toHexString()
+      let propertyToken = PropertyToken.load(
+        event.params.tokenAddress.toHexString()
+      )
+      log.warning('propertyToken: {}', [event.params.tokenAddress.toHexString()])
+
+      if (propertyToken) {
+        propertyToken.nft = nftId
+        propertyToken.save()
+      }
       nft.save()
     }
   }
+ 
 }
 
 export function handleDeadlineExtended(event: DeadlineExtended): void {
