@@ -241,58 +241,70 @@ export class Transfer__Params {
 }
 
 export class NFT__getPropertyResultValue0Struct extends ethereum.Tuple {
-  get location(): string {
+  get name(): string {
     return this[0].toString();
   }
 
+  get location(): string {
+    return this[1].toString();
+  }
+
   get area(): BigInt {
-    return this[1].toBigInt();
+    return this[2].toBigInt();
   }
 
   get propertyType(): string {
-    return this[2].toString();
-  }
-
-  get documents(): string {
     return this[3].toString();
   }
 
+  get documents(): string {
+    return this[4].toString();
+  }
+
+  get image(): string {
+    return this[5].toString();
+  }
+
   get isVerified(): boolean {
-    return this[4].toBoolean();
+    return this[6].toBoolean();
   }
 
   get isTokenized(): boolean {
-    return this[5].toBoolean();
+    return this[7].toBoolean();
   }
 
   get propertyToken(): Address {
-    return this[6].toAddress();
+    return this[8].toAddress();
   }
 
   get owner(): Address {
-    return this[7].toAddress();
+    return this[9].toAddress();
   }
 }
 
 export class NFT__propertiesResult {
   value0: string;
-  value1: BigInt;
-  value2: string;
+  value1: string;
+  value2: BigInt;
   value3: string;
-  value4: boolean;
-  value5: boolean;
-  value6: Address;
-  value7: Address;
+  value4: string;
+  value5: string;
+  value6: boolean;
+  value7: boolean;
+  value8: Address;
+  value9: Address;
 
   constructor(
     value0: string,
-    value1: BigInt,
-    value2: string,
+    value1: string,
+    value2: BigInt,
     value3: string,
-    value4: boolean,
-    value5: boolean,
-    value6: Address,
-    value7: Address,
+    value4: string,
+    value5: string,
+    value6: boolean,
+    value7: boolean,
+    value8: Address,
+    value9: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -302,51 +314,63 @@ export class NFT__propertiesResult {
     this.value5 = value5;
     this.value6 = value6;
     this.value7 = value7;
+    this.value8 = value8;
+    this.value9 = value9;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromString(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromString(this.value2));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromString(this.value3));
-    map.set("value4", ethereum.Value.fromBoolean(this.value4));
-    map.set("value5", ethereum.Value.fromBoolean(this.value5));
-    map.set("value6", ethereum.Value.fromAddress(this.value6));
-    map.set("value7", ethereum.Value.fromAddress(this.value7));
+    map.set("value4", ethereum.Value.fromString(this.value4));
+    map.set("value5", ethereum.Value.fromString(this.value5));
+    map.set("value6", ethereum.Value.fromBoolean(this.value6));
+    map.set("value7", ethereum.Value.fromBoolean(this.value7));
+    map.set("value8", ethereum.Value.fromAddress(this.value8));
+    map.set("value9", ethereum.Value.fromAddress(this.value9));
     return map;
   }
 
-  getLocation(): string {
+  getName(): string {
     return this.value0;
   }
 
-  getArea(): BigInt {
+  getLocation(): string {
     return this.value1;
   }
 
-  getPropertyType(): string {
+  getArea(): BigInt {
     return this.value2;
   }
 
-  getDocuments(): string {
+  getPropertyType(): string {
     return this.value3;
   }
 
-  getIsVerified(): boolean {
+  getDocuments(): string {
     return this.value4;
   }
 
-  getIsTokenized(): boolean {
+  getImage(): string {
     return this.value5;
   }
 
-  getPropertyToken(): Address {
+  getIsVerified(): boolean {
     return this.value6;
   }
 
-  getOwner(): Address {
+  getIsTokenized(): boolean {
     return this.value7;
+  }
+
+  getPropertyToken(): Address {
+    return this.value8;
+  }
+
+  getOwner(): Address {
+    return this.value9;
   }
 }
 
@@ -369,40 +393,6 @@ export class NFT extends ethereum.SmartContract {
     let result = super.tryCall(
       "DEFAULT_ADMIN_ROLE",
       "DEFAULT_ADMIN_ROLE():(bytes32)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  MINTER_ROLE(): Bytes {
-    let result = super.call("MINTER_ROLE", "MINTER_ROLE():(bytes32)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_MINTER_ROLE(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall("MINTER_ROLE", "MINTER_ROLE():(bytes32)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  VERIFIER_ROLE(): Bytes {
-    let result = super.call("VERIFIER_ROLE", "VERIFIER_ROLE():(bytes32)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_VERIFIER_ROLE(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "VERIFIER_ROLE",
-      "VERIFIER_ROLE():(bytes32)",
       [],
     );
     if (result.reverted) {
@@ -478,7 +468,7 @@ export class NFT extends ethereum.SmartContract {
   getProperty(tokenId: BigInt): NFT__getPropertyResultValue0Struct {
     let result = super.call(
       "getProperty",
-      "getProperty(uint256):((string,uint256,string,string,bool,bool,address,address))",
+      "getProperty(uint256):((string,string,uint256,string,string,string,bool,bool,address,address))",
       [ethereum.Value.fromUnsignedBigInt(tokenId)],
     );
 
@@ -490,7 +480,7 @@ export class NFT extends ethereum.SmartContract {
   ): ethereum.CallResult<NFT__getPropertyResultValue0Struct> {
     let result = super.tryCall(
       "getProperty",
-      "getProperty(uint256):((string,uint256,string,string,bool,bool,address,address))",
+      "getProperty(uint256):((string,string,uint256,string,string,string,bool,bool,address,address))",
       [ethereum.Value.fromUnsignedBigInt(tokenId)],
     );
     if (result.reverted) {
@@ -571,19 +561,23 @@ export class NFT extends ethereum.SmartContract {
   }
 
   mintProperty(
+    name: string,
     location: string,
     area: BigInt,
     propertyType: string,
     documents: string,
+    image: string,
   ): BigInt {
     let result = super.call(
       "mintProperty",
-      "mintProperty(string,uint256,string,string):(uint256)",
+      "mintProperty(string,string,uint256,string,string,string):(uint256)",
       [
+        ethereum.Value.fromString(name),
         ethereum.Value.fromString(location),
         ethereum.Value.fromUnsignedBigInt(area),
         ethereum.Value.fromString(propertyType),
         ethereum.Value.fromString(documents),
+        ethereum.Value.fromString(image),
       ],
     );
 
@@ -591,19 +585,23 @@ export class NFT extends ethereum.SmartContract {
   }
 
   try_mintProperty(
+    name: string,
     location: string,
     area: BigInt,
     propertyType: string,
     documents: string,
+    image: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "mintProperty",
-      "mintProperty(string,uint256,string,string):(uint256)",
+      "mintProperty(string,string,uint256,string,string,string):(uint256)",
       [
+        ethereum.Value.fromString(name),
         ethereum.Value.fromString(location),
         ethereum.Value.fromUnsignedBigInt(area),
         ethereum.Value.fromString(propertyType),
         ethereum.Value.fromString(documents),
+        ethereum.Value.fromString(image),
       ],
     );
     if (result.reverted) {
@@ -650,26 +648,28 @@ export class NFT extends ethereum.SmartContract {
   properties(param0: BigInt): NFT__propertiesResult {
     let result = super.call(
       "properties",
-      "properties(uint256):(string,uint256,string,string,bool,bool,address,address)",
+      "properties(uint256):(string,string,uint256,string,string,string,bool,bool,address,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return new NFT__propertiesResult(
       result[0].toString(),
-      result[1].toBigInt(),
-      result[2].toString(),
+      result[1].toString(),
+      result[2].toBigInt(),
       result[3].toString(),
-      result[4].toBoolean(),
-      result[5].toBoolean(),
-      result[6].toAddress(),
-      result[7].toAddress(),
+      result[4].toString(),
+      result[5].toString(),
+      result[6].toBoolean(),
+      result[7].toBoolean(),
+      result[8].toAddress(),
+      result[9].toAddress(),
     );
   }
 
   try_properties(param0: BigInt): ethereum.CallResult<NFT__propertiesResult> {
     let result = super.tryCall(
       "properties",
-      "properties(uint256):(string,uint256,string,string,bool,bool,address,address)",
+      "properties(uint256):(string,string,uint256,string,string,string,bool,bool,address,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
@@ -679,13 +679,15 @@ export class NFT extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new NFT__propertiesResult(
         value[0].toString(),
-        value[1].toBigInt(),
-        value[2].toString(),
+        value[1].toString(),
+        value[2].toBigInt(),
         value[3].toString(),
-        value[4].toBoolean(),
-        value[5].toBoolean(),
-        value[6].toAddress(),
-        value[7].toAddress(),
+        value[4].toString(),
+        value[5].toString(),
+        value[6].toBoolean(),
+        value[7].toBoolean(),
+        value[8].toAddress(),
+        value[9].toAddress(),
       ),
     );
   }
@@ -874,20 +876,28 @@ export class MintPropertyCall__Inputs {
     this._call = call;
   }
 
-  get location(): string {
+  get name(): string {
     return this._call.inputValues[0].value.toString();
   }
 
+  get location(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
   get area(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+    return this._call.inputValues[2].value.toBigInt();
   }
 
   get propertyType(): string {
-    return this._call.inputValues[2].value.toString();
+    return this._call.inputValues[3].value.toString();
   }
 
   get documents(): string {
-    return this._call.inputValues[3].value.toString();
+    return this._call.inputValues[4].value.toString();
+  }
+
+  get image(): string {
+    return this._call.inputValues[5].value.toString();
   }
 }
 

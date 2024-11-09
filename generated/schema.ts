@@ -1040,6 +1040,19 @@ export class NFT extends Entity {
     this.set("owner", Value.fromBytes(value));
   }
 
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
   get location(): string {
     let value = this.get("location");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1090,6 +1103,19 @@ export class NFT extends Entity {
 
   set documents(value: string) {
     this.set("documents", Value.fromString(value));
+  }
+
+  get image(): string {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string) {
+    this.set("image", Value.fromString(value));
   }
 
   get isTokenized(): boolean {

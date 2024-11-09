@@ -19,6 +19,8 @@ export function handleFundraisingCreated(event: FundraisingCreated): void {
     let nftInfo = nftContract.getProperty(event.params.nftId)
     nft.tokenId = event.params.nftId
     nft.owner = event.params.owner
+    nft.name = nftInfo.name
+    nft.image = nftInfo.image
     nft.location = nftInfo.location
     nft.area = nftInfo.area
     nft.propertyType = nftInfo.propertyType

@@ -123,28 +123,28 @@ export class VoteCast__Params {
 }
 
 export class PropertyGovernance__getProposalResult {
-  value0: BigInt;
-  value1: Address;
-  value2: string;
+  value0: Address;
+  value1: string;
+  value2: BigInt;
   value3: BigInt;
   value4: BigInt;
   value5: BigInt;
-  value6: BigInt;
-  value7: boolean;
-  value8: i32;
-  value9: Address;
+  value6: boolean;
+  value7: i32;
+  value8: Address;
+  value9: Bytes;
 
   constructor(
-    value0: BigInt,
-    value1: Address,
-    value2: string,
+    value0: Address,
+    value1: string,
+    value2: BigInt,
     value3: BigInt,
     value4: BigInt,
     value5: BigInt,
-    value6: BigInt,
-    value7: boolean,
-    value8: i32,
-    value9: Address,
+    value6: boolean,
+    value7: i32,
+    value8: Address,
+    value9: Bytes,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -160,59 +160,59 @@ export class PropertyGovernance__getProposalResult {
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
-    map.set("value2", ethereum.Value.fromString(this.value2));
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
-    map.set("value7", ethereum.Value.fromBoolean(this.value7));
+    map.set("value6", ethereum.Value.fromBoolean(this.value6));
     map.set(
-      "value8",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value8)),
+      "value7",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value7)),
     );
-    map.set("value9", ethereum.Value.fromAddress(this.value9));
+    map.set("value8", ethereum.Value.fromAddress(this.value8));
+    map.set("value9", ethereum.Value.fromBytes(this.value9));
     return map;
   }
 
-  getId(): BigInt {
+  getProposer(): Address {
     return this.value0;
   }
 
-  getProposer(): Address {
+  getDescription(): string {
     return this.value1;
   }
 
-  getDescription(): string {
+  getStartTime(): BigInt {
     return this.value2;
   }
 
-  getStartTime(): BigInt {
+  getEndTime(): BigInt {
     return this.value3;
   }
 
-  getEndTime(): BigInt {
+  getForVotes(): BigInt {
     return this.value4;
   }
 
-  getForVotes(): BigInt {
+  getAgainstVotes(): BigInt {
     return this.value5;
   }
 
-  getAgainstVotes(): BigInt {
+  getExecuted(): boolean {
     return this.value6;
   }
 
-  getExecuted(): boolean {
+  getProposalType(): i32 {
     return this.value7;
   }
 
-  getProposalType(): i32 {
+  getTarget(): Address {
     return this.value8;
   }
 
-  getTarget(): Address {
+  getCallData(): Bytes {
     return this.value9;
   }
 }
@@ -504,7 +504,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): PropertyGovernance__getProposalResult {
     let result = super.call(
       "getProposal",
-      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address)",
+      "getProposal(address,uint256):(address,string,uint256,uint256,uint256,uint256,bool,uint8,address,bytes)",
       [
         ethereum.Value.fromAddress(propertyToken),
         ethereum.Value.fromUnsignedBigInt(proposalId),
@@ -512,16 +512,16 @@ export class PropertyGovernance extends ethereum.SmartContract {
     );
 
     return new PropertyGovernance__getProposalResult(
-      result[0].toBigInt(),
-      result[1].toAddress(),
-      result[2].toString(),
+      result[0].toAddress(),
+      result[1].toString(),
+      result[2].toBigInt(),
       result[3].toBigInt(),
       result[4].toBigInt(),
       result[5].toBigInt(),
-      result[6].toBigInt(),
-      result[7].toBoolean(),
-      result[8].toI32(),
-      result[9].toAddress(),
+      result[6].toBoolean(),
+      result[7].toI32(),
+      result[8].toAddress(),
+      result[9].toBytes(),
     );
   }
 
@@ -531,7 +531,7 @@ export class PropertyGovernance extends ethereum.SmartContract {
   ): ethereum.CallResult<PropertyGovernance__getProposalResult> {
     let result = super.tryCall(
       "getProposal",
-      "getProposal(address,uint256):(uint256,address,string,uint256,uint256,uint256,uint256,bool,uint8,address)",
+      "getProposal(address,uint256):(address,string,uint256,uint256,uint256,uint256,bool,uint8,address,bytes)",
       [
         ethereum.Value.fromAddress(propertyToken),
         ethereum.Value.fromUnsignedBigInt(proposalId),
@@ -543,16 +543,16 @@ export class PropertyGovernance extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(
       new PropertyGovernance__getProposalResult(
-        value[0].toBigInt(),
-        value[1].toAddress(),
-        value[2].toString(),
+        value[0].toAddress(),
+        value[1].toString(),
+        value[2].toBigInt(),
         value[3].toBigInt(),
         value[4].toBigInt(),
         value[5].toBigInt(),
-        value[6].toBigInt(),
-        value[7].toBoolean(),
-        value[8].toI32(),
-        value[9].toAddress(),
+        value[6].toBoolean(),
+        value[7].toI32(),
+        value[8].toAddress(),
+        value[9].toBytes(),
       ),
     );
   }

@@ -6,7 +6,7 @@ dataSources:
     name: FactoryFundraising
     network: chapel
     source:
-      address: "0x7bf498CA1eE41C6038AA505E1C7879d0BB1973F1"
+      address: "0x8C02DC8cce71e853C8893beeC5426611abAA81aF"
       abi: FactoryFundraising
       startBlock: 45390076
     mapping:
@@ -33,7 +33,7 @@ dataSources:
     name: FactoryFundraisingDao
     network: chapel
     source:
-      address: "0xC7218Ff7c876d59D7338df9B497639150811795c"
+      address: "0xc49d8D1588960B10D4191df1731e92a34c59B3B9"
       abi: FactoryFundraisingDao
       startBlock: 45390076
     mapping:
@@ -57,7 +57,7 @@ dataSources:
     name: FactoryToken
     network: chapel
     source:
-      address: "0x4a3115294Dc06A130fa9B825627b2BafC076ee4b"
+      address: "0x5A3637F5c5d807A4620B0D1789d019c7521cbA69"
       abi: FactoryToken
       startBlock: 45390076
     mapping:
@@ -79,7 +79,7 @@ dataSources:
     name: PropertyGovernance
     network: chapel
     source:
-      address: "0xb66Dd8f3d17027b6741EC175964a2064B777f6B6"
+      address: "0x4e8A862566E411c1881608DD70f0eed3a2873939"
       abi: PropertyGovernance
       startBlock: 45397593
     mapping:

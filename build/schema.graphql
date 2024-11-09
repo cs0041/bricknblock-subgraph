@@ -83,10 +83,12 @@ type NFT @entity {
   id: ID!
   tokenId: BigInt!
   owner: Bytes!
+  name: String!
   location: String!
   area: BigInt!
   propertyType: String!
-  documents: String!
+  documents: String! 
+  image: String!
   isTokenized: Boolean!
   propertyToken: PropertyToken
   fundraising: Fundraising @derivedFrom(field: "nft")

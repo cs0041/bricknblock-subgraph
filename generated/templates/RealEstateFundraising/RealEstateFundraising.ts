@@ -164,6 +164,10 @@ export class PropertyTokenCreated__Params {
   get tokenAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
+
+  get nftId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
 }
 
 export class TokensClaimed extends ethereum.Event {
