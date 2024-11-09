@@ -37,12 +37,8 @@ export function handleProposalCreated(event: ProposalCreated): void {
     proposalEntity.againstVotes = proposal.getAgainstVotes()
     proposalEntity.executed = proposal.getExecuted()
     proposalEntity.proposalType = proposal.getProposalType()
-    proposalEntity.target = Address.fromString(
-      '0x0000000000000000000000000000000000000000'
-    )
-    proposalEntity.callData = Bytes.fromHexString(
-      '0x0000000000000000000000000000000000000000'
-    )
+    proposalEntity.target = proposal.getTarget()
+    proposalEntity.callData = proposal.getCallData()
     proposalEntity.proposalSnapshot = BigInt.fromI32(0)
     proposalEntity.state = propertyGovernance.getProposalState(
       event.params.propertyToken,
