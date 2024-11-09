@@ -35,7 +35,7 @@ export function handleFundraisingCreated(event: FundraisingCreated): void {
   fundraising.goalAmount = event.params.goalAmount
   fundraising.minInvestment = event.params.minInvestment
   fundraising.maxInvestment = event.params.maxInvestment
-  fundraising.deadline = event.params.duration.plus(event.block.timestamp)
+  fundraising.deadline = event.params.duration.times(BigInt.fromI32(86400)).plus(event.block.timestamp)
   fundraising.totalRaised = BigInt.fromI32(0)
   fundraising.isCompleted = false
   fundraising.createdAt = event.block.timestamp

@@ -18,6 +18,7 @@ type FundraisingDao @entity {
   id: ID!
   address: Bytes!
   propertyToken: PropertyToken!
+  proposal: Proposal!
   proposalId: BigInt!
   goalAmount: BigInt!
   minInvestment: BigInt!
@@ -45,7 +46,7 @@ type PropertyToken @entity {
   name: String!
   symbol: String!
   totalSupply: BigInt!
-  holders: [TokenHolder!]! @derivedFrom(field: "token")
+  balances: [TokenBalance!]! @derivedFrom(field: "token")
   transfers: [Transfer!]! @derivedFrom(field: "token")
   fundraising: Fundraising
   fundraisingDao: FundraisingDao
@@ -54,13 +55,19 @@ type PropertyToken @entity {
 }
 
 type TokenHolder @entity {
-  id: ID! # token-address
+  id: ID! # user wallet address
   address: Bytes!
-  token: PropertyToken!
-  balance: BigInt!
+  balances: [TokenBalance!]! @derivedFrom(field: "holder")
   delegatedTo: Bytes
   votingPower: BigInt!
-  votes: [Vote!]! @derivedFrom(field: "voter") # Add this to track holder's votes
+  votes: [Vote!]! @derivedFrom(field: "voter")
+}
+
+type TokenBalance @entity {
+  id: ID! # holder address + "-" + token address
+  holder: TokenHolder!
+  token: PropertyToken!
+  balance: BigInt!
 }
 
 type Transfer @entity {
@@ -102,7 +109,8 @@ type Proposal @entity {
   proposalSnapshot: BigInt!
   state: Int! # Maps to ProposalState enum
   votes: [Vote!]! @derivedFrom(field: "proposal")
-  createdAt: BigInt! # Add timestamp for sorting
+  fundraisingDao: FundraisingDao @derivedFrom(field: "proposal")
+  createdAt: BigInt!
 }
 
 type Vote @entity {

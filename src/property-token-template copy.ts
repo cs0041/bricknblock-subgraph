@@ -14,12 +14,10 @@ export function handleTransfer(event: Transfer): void {
   let token = PropertyToken.load(event.address.toHexString())
   if (!token) return
 
-  // Handle sender
+  // Update or create sender TokenHolder
   let fromHolder = TokenHolder.load(event.params.from.toHexString())
   if (fromHolder) {
-    let fromBalanceId = event.params.from.toHexString()
-      .concat('-')
-      .concat(event.address.toHexString())
+    let fromBalanceId = event.params.from.toHexString().concat('-').concat(event.address.toHexString())
     let fromBalance = TokenBalance.load(fromBalanceId)
     if (fromBalance) {
       fromBalance.balance = fromBalance.balance.minus(event.params.value)
@@ -27,7 +25,7 @@ export function handleTransfer(event: Transfer): void {
     }
   }
 
-  // Handle receiver
+  // Update or create receiver TokenHolder
   let toHolder = TokenHolder.load(event.params.to.toHexString())
   if (!toHolder) {
     toHolder = new TokenHolder(event.params.to.toHexString())
@@ -36,9 +34,7 @@ export function handleTransfer(event: Transfer): void {
     toHolder.save()
   }
 
-  let toBalanceId = event.params.to.toHexString()
-    .concat('-')
-    .concat(event.address.toHexString())
+  let toBalanceId = event.params.to.toHexString().concat('-').concat(event.address.toHexString())
   let toBalance = TokenBalance.load(toBalanceId)
   if (!toBalance) {
     toBalance = new TokenBalance(toBalanceId)

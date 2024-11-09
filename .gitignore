@@ -1,0 +1,34 @@
+# Build and Generated Files
+build/
+generated
+
+
+# Dependencies
+node_modules/
+yarn-error.log
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+ 
+
+# Testing
+coverage/
+.coverage/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+ 

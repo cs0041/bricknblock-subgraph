@@ -6,7 +6,7 @@ import {
   PropertyGovernance,
 } from '../generated/PropertyGovernance/PropertyGovernance'
 import { PropertyToken as PropertyTokenContract } from '../generated/PropertyGovernance/PropertyToken'
-import { Proposal, Vote, PropertyToken, TokenHolder, TokenBalance } from '../generated/schema'
+import { Proposal, Vote, PropertyToken, TokenHolder } from '../generated/schema'
 import { log } from 'matchstick-as'
 
 export function handleProposalCreated(event: ProposalCreated): void {
@@ -58,34 +58,25 @@ export function handleVoteCast(event: VoteCast): void {
     .toHexString()
     .concat('-')
     .concat(event.params.proposalId.toString())
-  
-  // Create or update TokenHolder using wallet address as ID
-  let holder = TokenHolder.load(event.params.voter.toHexString())
+  let propertyTokenId = event.address.toHexString()
+  let holderId = propertyTokenId
+    .concat('-')
+    .concat(event.params.voter.toHexString())
+  let voteId = proposalId.concat('-').concat(event.params.voter.toHexString())
+
+  // Create or update TokenHolder
+  let holder = TokenHolder.load(holderId)
   if (!holder) {
-    holder = new TokenHolder(event.params.voter.toHexString())
+    holder = new TokenHolder(holderId)
     holder.address = event.params.voter
     holder.votingPower = event.params.weight
     holder.save()
   }
 
-  // Create TokenBalance if needed
-  let balanceId = event.params.voter.toHexString()
-    .concat('-')
-    .concat(event.params.propertyToken.toHexString())
-  let tokenBalance = TokenBalance.load(balanceId)
-  if (!tokenBalance) {
-    tokenBalance = new TokenBalance(balanceId)
-    tokenBalance.holder = holder.id
-    tokenBalance.token = event.params.propertyToken.toHexString()
-    tokenBalance.balance = BigInt.fromI32(0)
-    tokenBalance.save()
-  }
-
-  let voteId = proposalId.concat('-').concat(event.params.voter.toHexString())
   let vote = new Vote(voteId)
   vote.proposal = proposalId
-  vote.voter = holder.id
-  vote.voterAddress = event.params.voter
+  vote.voter = holderId // Reference the TokenHolder entity
+  vote.voterAddress = event.params.voter // Store the raw address
   vote.support = event.params.support
   vote.weight = event.params.weight
   vote.timestamp = event.block.timestamp
@@ -144,13 +135,18 @@ export function handleProposalExecuted(event: ProposalExecuted): void {
 
     proposal.save()
 
-    // // Update the PropertyToken if needed (for certain proposal types)
-    // let propertyToken = PropertyToken.load(proposal.propertyToken)
-    // if (propertyToken) {
-    //   if (proposal.proposalType == 3) { // CreateFundraising
-    //     propertyToken.fundraisingDao = event.params.target.toHexString()
-    //     propertyToken.save()
-    //   }
-    // }
+    // Update the PropertyToken if needed (for certain proposal types)
+    let propertyToken = PropertyToken.load(proposal.propertyToken)
+    if (propertyToken) {
+      // Update any relevant PropertyToken fields based on the proposal type
+      if (proposal.proposalType == 2) {
+        // TransferFunds
+        // You might want to update some token stats here
+      } else if (proposal.proposalType == 3) {
+        // CreateFundraising
+        // You might want to link the new fundraising here
+      }
+      propertyToken.save()
+    }
   }
 }

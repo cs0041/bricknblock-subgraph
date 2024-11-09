@@ -27,20 +27,28 @@ export class FundraisingDaoCreated__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get goalAmount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+  get propertyToken(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
-  get minInvestment(): BigInt {
+  get proposalID(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get maxInvestment(): BigInt {
+  get goalAmount(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get duration(): BigInt {
+  get minInvestment(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get maxInvestment(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get duration(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 
